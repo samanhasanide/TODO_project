@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>To Do Home</title>
+
+    <style>
+        .todo-title {
+            font-size: 24px;
+        }
+
+        .todo-checkbox {
+            width: 20px;
+            height: 20px;
+        }
+
+        .date-title {
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+
+        .todo-item {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <h1>Sam's ToDo site</h1>
+
+
+    <ul>
+
+        {% for date, todos in grouped_todos.items %}
+
+        <h2 class="date-title">
+            {{ date }}
+        </h2>
+
+        {% for todo in todos %}
+
+        <div class="todo-item">
+
+            <input type="checkbox" class="todo-checkbox" data-id="{{ todo.id }}" {% if todo.completed %}checked{% endif %}>
+
+            <a href="{% url 'todo' todo.id %}">
+
+                <span class="todo-title" {% if todo.completed %} style="text-decoration: line-through;" {% endif %}>
+                    {{ todo }}
+                </span>
+
+            </a>
+
+        </div>
+
+        {% endfor %}
+
+        {% endfor %}
+
+    </ul>
+
+
+    <script>
+
+        const checkboxes = document.querySelectorAll('.todo-checkbox');
+
+
+        checkboxes.forEach(function (checkbox) {
+
+            checkbox.addEventListener('change', function () {
+
+                const todoId = this.dataset.id;
+
+                const title = this.nextElementSibling.querySelector('.todo-title');
+
+
+                fetch(`/toggle/${todoId}/`, {
+
+                    method: 'POST',
+
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    }
+
+                })
+
+                    .then(response => response.json())
+
+                    .then(data => {
+
+                        if (data.completed) {
+
+                            title.style.textDecoration = 'line-through';
+
+                        } else {
+
+                            title.style.textDecoration = 'none';
+
+                        }
+
+                    });
+
+            });
+
+        });
+
+    </script>
+
+
+    <a href="{% url 'add' %}">Add</a>
+
+</body>
+
+</html>

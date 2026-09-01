@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail</title>
+</head>
+
+<body>
+    <h1>{{todos}}</h1>
+    <h2>{{todos.detail}}</h2>
+</body>
+<a href="{% url 'update' todos.id %}">Update</a>
+<a href="{% url 'delete' todos.id %}">Delete</a>
+
+</html>
